@@ -1,4 +1,4 @@
-package it.com.foregroundservice;
+package com.example.foregroundservice.way1;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
+import com.orhanobut.logger.Logger;
 
 /**
  * 将通知代码注释后异常:
@@ -25,7 +27,7 @@ import android.util.Log;
  */
 public class ForegroundService extends Service {
 
-    private static final String TAG = "ForegroundService";
+    private static final String TAG = "FordService";
     private static final String CHANNEL_ID = "11111";
     private static final String CHANNEL_NAME = "ForegroundServiceChannel";
 
@@ -34,26 +36,23 @@ public class ForegroundService extends Service {
         super.onCreate();
         Log.d(TAG, "onCreate: ");
 
-        // 设置显示通知
-//        NotificationChannel channel;
-//        if (android.os.Build.VERSION.SDK_INT >= 26) {
-//            channel = new NotificationChannel(CHANNEL_ID,CHANNEL_NAME,
-//                    NotificationManager.IMPORTANCE_HIGH);
-//            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//            manager.createNotificationChannel(channel);
-//
-//            Notification notification = new Notification.Builder(getApplicationContext(),CHANNEL_ID).build();
-//            startForeground(1, notification);
-//        }
-
         if (Build.VERSION.SDK_INT < 18) {
             startForeground(1, new Notification());//API < 18 ，此方法能有效隐藏Notification上的图标
-            Log.d(TAG, "Build.VERSION.SDK_INT < 18: ");
+            Logger.d("Build.VERSION.SDK_INT < 18: ");
         } else {
-//            Intent innerIntent = new Intent(this, ForegroundService.class);
-//            startService(innerIntent);
-            startForeground(1, new Notification());
-            Log.d(TAG, "Build.VERSION.SDK_INT > 18: ");
+            Logger.d("Build.VERSION.SDK_INT > 18: ");
+            // 设置显示通知
+            NotificationChannel channel;
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                channel = new NotificationChannel(CHANNEL_ID,CHANNEL_NAME,
+                        NotificationManager.IMPORTANCE_HIGH);
+                NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.createNotificationChannel(channel);
+
+                Notification notification = new Notification.Builder(getApplicationContext(),CHANNEL_ID).build();
+                startForeground(1, notification);
+                stopForeground(true);
+            }
         }
 
 
@@ -61,21 +60,19 @@ public class ForegroundService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand: ");
-
+        Logger.d("onStartCommand: ");
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d(TAG, "onBind: ");
         return null;
     }
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy: ");
+        Logger.d("onDestroy: ");
         super.onDestroy();
     }
 }

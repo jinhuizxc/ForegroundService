@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="it.com.foregroundservice.MainActivity">
+    tools:context="com.example.foregroundservice.way1.Way1Activity">
 
     <Button
         android:id="@+id/start"

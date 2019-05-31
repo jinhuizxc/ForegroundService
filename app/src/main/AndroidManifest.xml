@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="it.com.foregroundservice">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.foregroundservice">
+
+    <!-- 前台服务权限 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".way1.Way1Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,11 +23,36 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".ForegroundService">
+        <service android:name="com.example.foregroundservice.way1.ForegroundService">
             <intent-filter>
                 <action android:name="it.com.foregroundservice.ForegroundService"/>
             </intent-filter>
         </service>
+
+        <service
+            android:name="com.example.foregroundservice.service.SocketService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="1000">
+                <action android:name="com.zx.android.platform.service.SocketService" />
+            </intent-filter>
+        </service>
+
+        <!-- 灰色保活 -->
+        <service
+            android:name="com.example.foregroundservice.service.SocketService$GrayInnerService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=".gray" />
+
+        <!--//具体的JobService名字和路径以自己编写的为准-->
+        <service
+            android:name=".job.CowboyJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service android:name=".way2.ForegroundEnablingService" />
+        <service android:name=".way2.FordService" />
+
 
     </application>
 

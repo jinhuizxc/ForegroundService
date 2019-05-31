@@ -1,4 +1,4 @@
-package it.com.foregroundservice;
+package com.example.foregroundservice.way1;
 
 import android.content.Intent;
 import android.os.Build;
@@ -7,7 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+import com.example.foregroundservice.R;
+import com.example.foregroundservice.way1.ForegroundService;
+
+/**
+ * 参考: https://github.com/lyldding/foregroundservice
+ *
+ */
+public class Way1Activity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
