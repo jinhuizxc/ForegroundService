@@ -4,6 +4,7 @@ import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -36,24 +37,29 @@ public class JobActivity extends AppCompatActivity {
         startService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startPollingService(JobActivity.this);
+                startService(JobActivity.this);
             }
         });
 
         stopService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                stopService();
+                stopService();
             }
         });
 
     }
 
+    private void stopService() {
+        Intent intent = new Intent(this, CowboyJobService.class);
+        stopService(intent);
+    }
+
 
     //开启JobService服务：CowboyJobService.class为上边创建的JobService
-    public static void startPollingService(Context context) {
+    public void startService(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            JobInfo.Builder builder = new JobInfo.Builder(1, new ComponentName(context, CowboyJobService.class));
+            JobInfo.Builder builder = new JobInfo.Builder(1, new ComponentName(context, JobHandlerService.class));
             builder.setMinimumLatency(0)
                     .setBackoffCriteria(JobInfo.DEFAULT_INITIAL_BACKOFF_MILLIS, JobInfo.BACKOFF_POLICY_LINEAR);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -68,7 +74,8 @@ public class JobActivity extends AppCompatActivity {
             }
         } else {
             //系统5.0以下的可继续使用Service
-
+            Intent intent = new Intent(context, JobHandlerService.class);
+            startService(intent);
         }
     }
 
